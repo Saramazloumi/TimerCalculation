@@ -28,9 +28,9 @@ public class StartActivity extends AppCompatActivity implements View.OnClickList
     int num1, num2, userResult;
     long userTimer;
     String[] operand = {"+", "-", "*","/"};
-    String op, status;
+    String op, userStatus;
 
-    ArrayList<Operation> list;
+    ArrayList<Operation> list = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -200,8 +200,9 @@ public class StartActivity extends AppCompatActivity implements View.OnClickList
                 break;
 
             case R.id.btnEqual:
+                String randOperation = textViewOperation.getText().toString();
 
-                switch (textViewOperation.getText().toString()){
+                switch (randOperation){
 
                     case "+":
                         result = num1 + num2;
@@ -221,17 +222,14 @@ public class StartActivity extends AppCompatActivity implements View.OnClickList
                 }
                 userResult = Integer.valueOf(editTextShowResult.getText().toString());
                 if (result == userResult){
-                    status = "Correct";
-                    countDownTimer2.cancel();
-                    timer = Integer.valueOf(textViewTimer.getText().toString());
+                    userStatus = "Correct";
                     Toast.makeText(this, "Correct Answer", Toast.LENGTH_LONG).show();
                 }else{
-                    status = "Wrong";
-                    timer = Integer.valueOf(textViewTimer.getText().toString());
+                    userStatus = "Wrong";
                     Toast.makeText(this, "Wrong Answer", Toast.LENGTH_LONG).show();
                 }
-
-                list.add(new Operation(num1, num2, userResult, op, status,timer));
+               userTimer = Integer.valueOf(textViewTimer.getText().toString());
+               list.add(new Operation(num1, num2, userResult, randOperation, userStatus,userTimer));
                 break;
 
             case R.id.btnSave:
@@ -260,6 +258,7 @@ public class StartActivity extends AppCompatActivity implements View.OnClickList
                 textViewOperation.setText(op);
                 textViewSecondNumber.setText(String.valueOf(num2));
                 updateCountDown();
+
             }
             @Override
             public void onFinish() {
