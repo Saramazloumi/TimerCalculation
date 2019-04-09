@@ -10,27 +10,33 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
-import java.util.Random;
-
-import model.Operation;
+import model.QuestionGenerator;
+import model.Validator;
 
 public class StartActivity extends AppCompatActivity implements View.OnClickListener {
 
     EditText editTextShowResult;
-    TextView textViewFirstNumber, textViewSecondNumber,textViewOperation, textViewTimer;
+    TextView textViewOperation, textViewTimer;
     Button btnZero, btnOne, btnTwo,btnThree,btnFour,btnFive,btnSix,btnSeven,btnEight,btnNine,
-    btnDash,btnDot,btnStart,btnClear,btnStop,btnQuit,btnEqual,btnSave,btnResult;
+    btnDash,btnDot,btnStartStop,btnClear,btnNext,btnQuit,btnEqual,btnSave,btnResult;
+
+    private final String DIGITS[] = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", " -", "."};
 
     private CountDownTimer countDownTimer, countDownTimer2;
 
     public long timeLeft = 10000;
-    int num1, num2, userResult;
-    long userTimer;
-    String[] operand = {"+", "-", "*","/"};
-    String op, userStatus;
+    QuestionGenerator question;
+    Validator validatory;
 
-    ArrayList<Operation> list = new ArrayList<>();
+    long userTimer;
+    String status;
+    boolean activeButton;
+
+    public enum btnStartStopState{
+        Start,
+        Stop
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,11 +44,10 @@ public class StartActivity extends AppCompatActivity implements View.OnClickList
         initialize();
     }
 
+
     private void initialize() {
         editTextShowResult = findViewById(R.id.editTextShowResult);
-        textViewFirstNumber = findViewById(R.id.textViewFirstNumber);
         textViewOperation = findViewById(R.id.textViewOperation);
-        textViewSecondNumber = findViewById(R.id.textViewSecondNumber);
         textViewTimer = findViewById(R.id.textViewTimer);
         btnZero = findViewById(R.id.btnZero);
         btnOne = findViewById(R.id.btnOne);
@@ -56,9 +61,9 @@ public class StartActivity extends AppCompatActivity implements View.OnClickList
         btnNine = findViewById(R.id.btnNine);
         btnDot = findViewById(R.id.btnDot);
         btnDash = findViewById(R.id.btnDash);
-        btnStart = findViewById(R.id.btnStart);
+        btnStartStop = findViewById(R.id.btnStartStop);
         btnClear = findViewById(R.id.btnClear);
-        btnStop = findViewById(R.id.btnStop);
+        btnNext = findViewById(R.id.btnNext);
         btnQuit = findViewById(R.id.btnQuit);
         btnEqual = findViewById(R.id.btnEqual);
         btnSave = findViewById(R.id.btnSave);
@@ -75,124 +80,75 @@ public class StartActivity extends AppCompatActivity implements View.OnClickList
         btnNine.setOnClickListener(this);
         btnDash.setOnClickListener(this);
         btnDot.setOnClickListener(this);
-        btnStart.setOnClickListener(this);
+        btnStartStop.setOnClickListener(this);
         btnClear.setOnClickListener(this);
-        btnStop.setOnClickListener(this);
+        btnNext.setOnClickListener(this);
         btnQuit.setOnClickListener(this);
         btnEqual.setOnClickListener(this);
         btnSave.setOnClickListener(this);
         btnResult.setOnClickListener(this);
-
+        activeButton = false;
+        question = new QuestionGenerator();
+        //btnStartStop.setText("Start");
     }
 
     @Override
     public void onClick(View v) {
         int result = 0;
-        String randOp = null, status = null;
-        long timer = 0;
-
         switch (v.getId()){
 
             case R.id.btnZero:
-                if (editTextShowResult.toString().equals("")){
-                    editTextShowResult.setText(String.valueOf(0));
-                }else{
-                    editTextShowResult.append(String.valueOf(0));
-                }
+                editTextShowResult.append(DIGITS[0]);
                 break;
-
             case R.id.btnOne:
-                if (editTextShowResult.toString().equals("")){
-                    editTextShowResult.setText(String.valueOf(1));
-                }else{
-                    editTextShowResult.append(String.valueOf(1));
-                }
+                editTextShowResult.append(DIGITS[1]);
                 break;
-
             case R.id.btnTwo:
-                if (editTextShowResult.toString().equals("")){
-                    editTextShowResult.setText(String.valueOf(2));
-                }else{
-                    editTextShowResult.append(String.valueOf(2));
-                }
+                editTextShowResult.append(DIGITS[2]);
                 break;
-
             case R.id.btnThree:
-                if (editTextShowResult.toString().equals("")){
-                    editTextShowResult.setText(String.valueOf(3));
-                }else{
-                    editTextShowResult.append(String.valueOf(3));
-                }
+                editTextShowResult.append(DIGITS[3]);
                 break;
-
             case R.id.btnFour:
-                if (editTextShowResult.toString().equals("")){
-                    editTextShowResult.setText(String.valueOf(4));
-                }else{
-                    editTextShowResult.append(String.valueOf(4));
-                }
+                editTextShowResult.append(DIGITS[4]);
                 break;
-
             case R.id.btnFive:
-                if (editTextShowResult.toString().equals("")){
-                    editTextShowResult.setText(String.valueOf(5));
-                }else{
-                    editTextShowResult.append(String.valueOf(5));
-                }
+                editTextShowResult.append(DIGITS[5]);
                 break;
-
             case R.id.btnSix:
-                if (editTextShowResult.toString().equals("")){
-                    editTextShowResult.setText(String.valueOf(6));
-                }else{
-                    editTextShowResult.append(String.valueOf(6));
-                }
+                editTextShowResult.append(DIGITS[6]);
                 break;
-
             case R.id.btnSeven:
-                if (editTextShowResult.toString().equals("")){
-                    editTextShowResult.setText(String.valueOf(7));
-                }else{
-                    editTextShowResult.append(String.valueOf(7));
-                }
+                editTextShowResult.append(DIGITS[7]);
                 break;
-
             case R.id.btnEight:
-                if (editTextShowResult.toString().equals("")){
-                    editTextShowResult.setText(String.valueOf(8));
-                }else{
-                    editTextShowResult.append(String.valueOf(8));
-                }
+                editTextShowResult.append(DIGITS[8]);
                 break;
-
             case R.id.btnNine:
-                if (editTextShowResult.toString().equals("")){
-                    editTextShowResult.setText(String.valueOf(9));
-                }else{
-                    editTextShowResult.append(String.valueOf(9));
-                }
+                editTextShowResult.append(DIGITS[9]);
                 break;
-
             case R.id.btnDot:
-                String text = editTextShowResult.getText().toString();
-                editTextShowResult.setText(text + ".");
+                editTextShowResult.append(DIGITS[11]);
                 break;
-
             case R.id.btnDash:
-                editTextShowResult.setText("-");
+                editTextShowResult.append(DIGITS[10]);
                 break;
+            case R.id.btnStartStop:
 
-            case R.id.btnStart:
-                startTimer();
+                if (activeButton){
+                  stopCounter();
+                }else {
+                    startTimer();
+                    updateCountDown();
+                }
                 break;
 
             case R.id.btnClear:
                 clearText();
                 break;
 
-            case R.id.btnStop:
-                countDownTimer.cancel();
-                countDownTimer2.cancel();
+            case R.id.btnNext:
+                startTimer();
                 break;
 
             case R.id.btnQuit:
@@ -200,36 +156,18 @@ public class StartActivity extends AppCompatActivity implements View.OnClickList
                 break;
 
             case R.id.btnEqual:
-                String randOperation = textViewOperation.getText().toString();
+                validatory = new Validator(Integer.valueOf(editTextShowResult.getText().toString()), question.correctResult());
+                if (validatory.validationAnswer()){
+                    Toast.makeText(this, "Good Job!", Toast.LENGTH_SHORT).show();
+                }else
+                    Toast.makeText(this, "Wrong!", Toast.LENGTH_SHORT).show();
 
-                switch (randOperation){
+              editTextShowResult.setText(null);
+              countDownTimer.cancel();
+              countDownTimer2.cancel();
 
-                    case "+":
-                        result = num1 + num2;
-                        break;
-
-                    case "-":
-                        result = num1 - num2;
-                        break;
-
-                    case "*":
-                        result = num1 * num2;
-                        break;
-
-                    case "/":
-                        result = num1 / num2;
-                        break;
-                }
-                userResult = Integer.valueOf(editTextShowResult.getText().toString());
-                if (result == userResult){
-                    userStatus = "Correct";
-                    Toast.makeText(this, "Correct Answer", Toast.LENGTH_LONG).show();
-                }else{
-                    userStatus = "Wrong";
-                    Toast.makeText(this, "Wrong Answer", Toast.LENGTH_LONG).show();
-                }
-               userTimer = Integer.valueOf(textViewTimer.getText().toString());
-               list.add(new Operation(num1, num2, userResult, randOperation, userStatus,userTimer));
+              startTimer();
+              updateCountDown();
                 break;
 
             case R.id.btnSave:
@@ -237,35 +175,36 @@ public class StartActivity extends AppCompatActivity implements View.OnClickList
 
             case R.id.btnResult:
                 editTextShowResult.setText(null);
+                countDownTimer.cancel();
+                countDownTimer2.cancel();
                 Intent intent = new Intent(this, SecondActivity.class);
-                intent.putExtra("key",list);
                 startActivity(intent);
                 break;
         }
-
     }
 
     private void startTimer() {
-          countDownTimer = new CountDownTimer(3600000,10000) {
+        question.generateOperation();
+        textViewOperation.setText(question.toString());
+
+        btnStartStop.setText(btnStartStopState.Stop.name());
+        activeButton = true;
+
+          countDownTimer = new CountDownTimer(getResources().getInteger(R.integer.time),10000) {
+
             @Override
             public void onTick(long millisUntilFinished) {
                 editTextShowResult.setText(null);
-                Random random = new Random();
-                num1 = random.nextInt(10) + 1;
-                num2 = random.nextInt(10) + 1;
-                op = operand[random.nextInt(operand.length)];
-                textViewFirstNumber.setText(String.valueOf(num1));
-                textViewOperation.setText(op);
-                textViewSecondNumber.setText(String.valueOf(num2));
+                userTimer = getResources().getInteger(R.integer.time) - millisUntilFinished;
                 updateCountDown();
 
             }
             @Override
             public void onFinish() {
-
+                userTimer = 0;
+                startTimer();
             }
-        };
-        countDownTimer.start();
+        }.start();
     }
 
     public void updateCountDown(){
@@ -279,17 +218,25 @@ public class StartActivity extends AppCompatActivity implements View.OnClickList
             }
             @Override
             public void onFinish() {
-                //textViewTimer.setText(String.valueOf(timeLeft));
+                updateCountDown();
             }
-        };
-        countDownTimer2.start();
+        }.start();
+    }
+
+    public void stopCounter(){
+        btnStartStop.setText(btnStartStopState.Start.name());
+        btnStartStop.setVisibility(View.VISIBLE);
+        countDownTimer.cancel();
+        countDownTimer2.cancel();
+        activeButton = false;
     }
 
     public void clearText(){
         editTextShowResult.setText(null);
-        textViewFirstNumber.setText(null);
         textViewOperation.setText(null);
-        textViewSecondNumber.setText(null);
         editTextShowResult.requestFocus();
     }
+
+
+
 }
