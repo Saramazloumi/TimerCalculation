@@ -10,7 +10,11 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+
+import model.FileManager;
 import model.QuestionGenerator;
+import model.StoreInformation;
 import model.Validator;
 
 public class StartActivity extends AppCompatActivity implements View.OnClickListener {
@@ -27,10 +31,15 @@ public class StartActivity extends AppCompatActivity implements View.OnClickList
     public long timeLeft = 10000;
     QuestionGenerator question;
     Validator validatory;
+    //StoreInformation allInformation;
+
+    ArrayList<StoreInformation> infoList;
+    FileManager fileManager;
 
     long userTimer;
-    String status;
+    String status, questions;
     boolean activeButton;
+    int userAnswer;
 
     public enum btnStartStopState{
         Start,
@@ -89,6 +98,8 @@ public class StartActivity extends AppCompatActivity implements View.OnClickList
         btnResult.setOnClickListener(this);
         activeButton = false;
         question = new QuestionGenerator();
+        infoList = new ArrayList<StoreInformation>();
+        fileManager = new FileManager(this);
         //btnStartStop.setText("Start");
     }
 
@@ -131,7 +142,8 @@ public class StartActivity extends AppCompatActivity implements View.OnClickList
                 editTextShowResult.append(DIGITS[11]);
                 break;
             case R.id.btnDash:
-                editTextShowResult.append(DIGITS[10]);
+                String text = "-";
+                editTextShowResult.append(text);
                 break;
             case R.id.btnStartStop:
 
@@ -156,11 +168,15 @@ public class StartActivity extends AppCompatActivity implements View.OnClickList
                 break;
 
             case R.id.btnEqual:
+                //validate the result
                 validatory = new Validator(Integer.valueOf(editTextShowResult.getText().toString()), question.correctResult());
                 if (validatory.validationAnswer()){
                     Toast.makeText(this, "Good Job!", Toast.LENGTH_SHORT).show();
-                }else
+                    status = "Correct";
+                }else {
                     Toast.makeText(this, "Wrong!", Toast.LENGTH_SHORT).show();
+                    status = "Fail";
+                }
 
               editTextShowResult.setText(null);
               countDownTimer.cancel();
@@ -168,9 +184,13 @@ public class StartActivity extends AppCompatActivity implements View.OnClickList
 
               startTimer();
               updateCountDown();
+
+              //saving information
+                saveInformation();
                 break;
 
             case R.id.btnSave:
+                fileManager.writeInFile(infoList);
                 break;
 
             case R.id.btnResult:
@@ -178,6 +198,7 @@ public class StartActivity extends AppCompatActivity implements View.OnClickList
                 countDownTimer.cancel();
                 countDownTimer2.cancel();
                 Intent intent = new Intent(this, SecondActivity.class);
+                intent.putExtra("key", infoList);
                 startActivity(intent);
                 break;
         }
@@ -201,7 +222,7 @@ public class StartActivity extends AppCompatActivity implements View.OnClickList
             }
             @Override
             public void onFinish() {
-                userTimer = 0;
+                //userTimer = 0;
                 startTimer();
             }
         }.start();
@@ -237,6 +258,11 @@ public class StartActivity extends AppCompatActivity implements View.OnClickList
         editTextShowResult.requestFocus();
     }
 
+    public void saveInformation(){
+        userAnswer = Integer.valueOf(editTextShowResult.getText().toString());
+        questions = textViewOperation.getText().toString();
 
+        infoList.add(new StoreInformation(questions,userAnswer,(int)userTimer / 1000,status));
+    }
 
 }
