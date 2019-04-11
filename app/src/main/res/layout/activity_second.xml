@@ -5,50 +5,61 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFF"
+    android:background="#111"
     android:orientation="vertical"
     tools:context=".SecondActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="1"
         android:orientation="vertical">
 
         <TableLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:layout_weight="2">
 
             <TableRow
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                >
+                android:layout_height="match_parent">
 
                 <TextView
                     android:id="@+id/textViewLOperation"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.5"
                     android:text="Operation"
                     style="@style/textView_listView_style"/>
 
                 <TextView
                     android:id="@+id/textViewLAnswer"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.5"
                     android:text="Answer"
                     style="@style/textView_listView_style"/>
 
                 <TextView
                     android:id="@+id/textViewLElapsedTime"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.5"
                     android:text="Time"
                     style="@style/textView_listView_style"/>
 
                 <TextView
                     android:id="@+id/textViewLStatus"
+                    android:layout_width="0dp"
+                    android:layout_weight="0.5"
+                    android:layout_height="match_parent"
                     android:text="Status"
                     style="@style/textView_listView_style"/>
             </TableRow>
 
             <TableRow
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="2">
+                >
 
                 <ListView
                     android:id="@+id/listViewResult"
@@ -58,47 +69,38 @@
                     style="@style/list_line_style"/>
             </TableRow>
 
-        </TableLayout>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="3"
-        android:orientation="vertical">
-
-        <TableLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
             <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" >
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
 
                 <TextView
                     android:id="@+id/textViewPercentage"
-                    android:layout_width="match_parent"
-                    android:layout_height="140dp"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:textSize="20dp"
-                    android:textColor="#111"
+                    android:textSize="20sp"
+                    android:textColor="#FFF"
                     android:text="" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <Button
+                    android:id="@+id/btnOk"
+                    android:layout_width="300dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="55dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="#D88306"
+                    android:textColor="#FFF"
+                    android:textSize="20sp"
+                    android:text="OK" />
+
             </TableRow>
 
         </TableLayout>
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <Button
-            android:id="@+id/btnOk"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:textSize="20dp"
-            android:text="Ok" />
-    </LinearLayout>
 </LinearLayout>

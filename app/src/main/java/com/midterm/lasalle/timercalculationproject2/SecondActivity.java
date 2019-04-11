@@ -11,6 +11,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import model.Custom;
+import model.FileManager;
 import model.StoreInformation;
 
 public class SecondActivity extends AppCompatActivity implements View.OnClickListener {
@@ -18,8 +19,10 @@ public class SecondActivity extends AppCompatActivity implements View.OnClickLis
     TextView textViewPercentage;
     Button btnOk;
     ArrayList<StoreInformation> list;
-
-
+    float rightCounter = 0.0f;
+    int getTotalQuestion, getTotalAnswer, getTotalElapsedTime,getTotalDuration, getEmptyAnswers;
+    double getVelocity = 0.0d;
+    String text;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +30,33 @@ public class SecondActivity extends AppCompatActivity implements View.OnClickLis
         setContentView(R.layout.activity_second);
         list = (ArrayList<StoreInformation>)getIntent().getExtras().getSerializable("key");
         initialize();
+
+        for (int i = 0; i < list.size(); i++){
+            if (list.get(i).getStatus().contains("Right")){
+                rightCounter++;
+            }
+            getTotalQuestion = list.size();
+            getTotalElapsedTime += list.get(i).getElapsedTime();
+            getTotalDuration = (list.size()) * 10;
+
+            if (list.get(i).getAnswer().equals("")){
+                getEmptyAnswers ++;
+            }else{
+                getEmptyAnswers += 0;
+            }
+        }
+
+        getTotalAnswer = ((list.size()) - getEmptyAnswers);
+        getVelocity = Double.valueOf(getTotalElapsedTime)/ Double.valueOf(getTotalDuration);
+        int wrong = Math.round((list.size() - rightCounter)/list.size()*100);
+        int right = Math.round((rightCounter/list.size())*100);
+
+
+           text = "Total questions: " + getTotalQuestion + "\n" + "Total answered questions: " + getTotalAnswer +
+                "\n" + "Total Duration: " + getTotalDuration + "\n"+ "Total Elapsed Time: "+ getTotalElapsedTime +
+                "\n" + "Correct Answers: " + right +"%" + "\n" + "Wrong Answers: " + wrong + "%" + "\n"+ "Velocity: " + getVelocity;
+
+        textViewPercentage.setText(text);
     }
 
     private void initialize() {
@@ -41,6 +71,13 @@ public class SecondActivity extends AppCompatActivity implements View.OnClickLis
 
     @Override
     public void onClick(View v) {
-        finish();
+
+        switch (v.getId()){
+
+            case R.id.btnOk:
+                finish();
+                break;
+        }
+
     }
 }

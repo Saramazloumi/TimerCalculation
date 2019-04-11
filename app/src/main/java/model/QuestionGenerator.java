@@ -54,27 +54,27 @@ public class QuestionGenerator implements Serializable {
 
             case "+":
                 this.result = num1 + num2;
-                this.text = num1 + "  +  " + num2 + "  =  " + "  ?  ";
+                this.text = num1 + "  +  " + num2;
                 break;
 
             case "-":
                 this.result = num1 - num2;
-                this.text = num1 + "  -  " + num2 + "  =  " + "  ?  ";
+                this.text = num1 + "  -  " + num2;
                 break;
 
             case "*":
                 this.result = num1 * num2;
-                this.text = num1 + "  *  " + num2 + "  =  " + "  ?  ";
+                this.text = num1 + "  *  " + num2;
                 break;
 
             case "/":
                 if (num2 == 0) {
                     num2 = random.nextInt(10) + 1;
                     this.result = num1 / num2;
-                    this.text = num1 + "  /  " + num2 + "  =  " + "  ?  ";
+                    this.text = num1 + "  /  " + num2;
                 } else {
                     this.result = num1 / num2;
-                    this.text = num1 + "  /  " + num2 + "  =  " + "  ?  ";
+                    this.text = num1 + "  /  " + num2;
                 }
                 break;
         }
@@ -84,7 +84,7 @@ public class QuestionGenerator implements Serializable {
 
     @Override
     public String toString() {
-        return num1 + " " + operand + " " + num2 + " = " + " ? ";
+        return num1 + " " + operand + " " + num2;
     }
 }
 

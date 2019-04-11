@@ -14,12 +14,13 @@
             android:id="@+id/textViewLOperation"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="15dp"
-            android:textColor="#111"
+            android:textSize="20sp"
+            android:textColor="#FFF"
             android:layout_weight="1"
             android:padding="20dp"
             android:gravity="center"
             android:text=""
+            style="@style/list_line_style"
             />
 
         <TextView
@@ -27,11 +28,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="20dp"
-            android:padding="10dp"
+            android:padding="20dp"
             android:layout_weight="1"
-            android:textColor="#111"
+            android:textColor="#FFF"
             android:gravity="center"
             android:text=""
+            style="@style/list_line_style"
             />
 
         <TextView
@@ -39,11 +41,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="20dp"
-            android:textColor="#111"
+            android:textColor="#FFF"
             android:layout_weight="1"
-            android:padding="10dp"
+            android:padding="20dp"
             android:gravity="center"
             android:text=""
+            style="@style/list_line_style"
             />
 
         <TextView
@@ -51,11 +54,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="20dp"
-            android:padding="10dp"
+            android:padding="20dp"
             android:layout_weight="1"
-            android:textColor="#111"
+            android:textColor="#FFF"
             android:gravity="center"
             android:text=""
+            style="@style/list_line_style"
             />
         </LinearLayout>
 

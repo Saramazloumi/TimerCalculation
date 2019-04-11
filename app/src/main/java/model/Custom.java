@@ -29,7 +29,7 @@ public class Custom extends ArrayAdapter<StoreInformation> {
     public View getView(int position,View convertView,ViewGroup parent) {
 
         String question = getItem(position).getQuestion();
-        int answer = getItem(position).getAnswer();
+        String answer = getItem(position).getAnswer();
         int elapsedTime = getItem(position).getElapsedTime();
         String status = getItem(position).getStatus();
         StoreInformation si = new StoreInformation(question,answer,elapsedTime,status);
@@ -42,7 +42,7 @@ public class Custom extends ArrayAdapter<StoreInformation> {
         TextView tStatus = (TextView) convertView.findViewById(R.id.textViewLStatus);
 
         tOperation.setText(question);
-        tAnswer.setText(String.valueOf(answer));
+        tAnswer.setText(answer);
         tElapsedTime.setText(String.valueOf(elapsedTime));
         tStatus.setText(status);
 

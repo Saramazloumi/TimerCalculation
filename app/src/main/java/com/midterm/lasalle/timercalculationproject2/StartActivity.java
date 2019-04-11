@@ -1,5 +1,6 @@
 package com.midterm.lasalle.timercalculationproject2;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.CountDownTimer;
 import android.support.v7.app.AppCompatActivity;
@@ -30,16 +31,14 @@ public class StartActivity extends AppCompatActivity implements View.OnClickList
 
     public long timeLeft = 10000;
     QuestionGenerator question;
-    Validator validatory;
-    //StoreInformation allInformation;
-
-    ArrayList<StoreInformation> infoList;
     FileManager fileManager;
+    Validator validatory;
+    ArrayList<StoreInformation> infoList;
 
     long userTimer;
     String status, questions;
     boolean activeButton;
-    int userAnswer;
+    String userAnswer;
 
     public enum btnStartStopState{
         Start,
@@ -100,12 +99,10 @@ public class StartActivity extends AppCompatActivity implements View.OnClickList
         question = new QuestionGenerator();
         infoList = new ArrayList<StoreInformation>();
         fileManager = new FileManager(this);
-        //btnStartStop.setText("Start");
     }
 
     @Override
     public void onClick(View v) {
-        int result = 0;
         switch (v.getId()){
 
             case R.id.btnZero:
@@ -155,12 +152,26 @@ public class StartActivity extends AppCompatActivity implements View.OnClickList
                 }
                 break;
 
+            case R.id.btnSave:
+                fileManager.writeInFile(infoList);
+                break;
+
             case R.id.btnClear:
                 clearText();
                 break;
 
             case R.id.btnNext:
-                startTimer();
+                try {
+                    stopCountDown();
+                    questions = textViewOperation.getText().toString();
+                    infoList.add(new StoreInformation(questions, "", (int)userTimer / 1000, "Fail"));
+                    Toast.makeText(this,"Fail!", Toast.LENGTH_SHORT).show();
+                    startTimer();
+                    updateCountDown();
+                }catch(Exception e){
+                    Toast.makeText(this,e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+
                 break;
 
             case R.id.btnQuit:
@@ -168,42 +179,41 @@ public class StartActivity extends AppCompatActivity implements View.OnClickList
                 break;
 
             case R.id.btnEqual:
-                //validate the result
-                validatory = new Validator(Integer.valueOf(editTextShowResult.getText().toString()), question.correctResult());
-                if (validatory.validationAnswer()){
-                    Toast.makeText(this, "Good Job!", Toast.LENGTH_SHORT).show();
-                    status = "Correct";
-                }else {
-                    Toast.makeText(this, "Wrong!", Toast.LENGTH_SHORT).show();
-                    status = "Fail";
+
+                try { //validate the result
+                    validatory = new Validator(Integer.valueOf(editTextShowResult.getText().toString()), question.correctResult());
+                    if (validatory.validationAnswer()) {
+                        status = "Right";
+                        Toast.makeText(this, "Good Job!", Toast.LENGTH_SHORT).show();
+                    } else if(validatory.validationAnswer() == false || userAnswer.equals("")){
+                        status = "Fail";
+                        Toast.makeText(this, "Wrong!", Toast.LENGTH_SHORT).show();
+                    }
+                    saveInformation();
+                    stopCountDown();
+
+                    startTimer();
+                    updateCountDown();
+
+                }catch(Exception e){
+                    Toast.makeText(this, "No answer!", Toast.LENGTH_SHORT).show();
                 }
 
-              editTextShowResult.setText(null);
-              countDownTimer.cancel();
-              countDownTimer2.cancel();
-
-              startTimer();
-              updateCountDown();
-
-              //saving information
-                saveInformation();
-                break;
-
-            case R.id.btnSave:
-                fileManager.writeInFile(infoList);
                 break;
 
             case R.id.btnResult:
-                editTextShowResult.setText(null);
-                countDownTimer.cancel();
-                countDownTimer2.cancel();
-                Intent intent = new Intent(this, SecondActivity.class);
-                intent.putExtra("key", infoList);
-                startActivity(intent);
+                try {
+                    stopCountDown();
+                    Intent intent = new Intent(this, SecondActivity.class);
+                    intent.putExtra("key", infoList);
+                    startActivity(intent);
+                }catch(Exception e){
+                    Toast.makeText(this, "No Answer yet!", Toast.LENGTH_SHORT).show();
+                }
                 break;
         }
     }
-
+Context context  = this;
     private void startTimer() {
         question.generateOperation();
         textViewOperation.setText(question.toString());
@@ -211,19 +221,19 @@ public class StartActivity extends AppCompatActivity implements View.OnClickList
         btnStartStop.setText(btnStartStopState.Stop.name());
         activeButton = true;
 
-          countDownTimer = new CountDownTimer(getResources().getInteger(R.integer.time),10000) {
+          countDownTimer = new CountDownTimer(10000,1000) {
 
             @Override
             public void onTick(long millisUntilFinished) {
-                editTextShowResult.setText(null);
-                userTimer = getResources().getInteger(R.integer.time) - millisUntilFinished;
-                updateCountDown();
-
+                userTimer = 10000 - millisUntilFinished;
             }
             @Override
             public void onFinish() {
-                //userTimer = 0;
+                userTimer = 0;
                 startTimer();
+                questions = textViewOperation.getText().toString();
+                infoList.add(new StoreInformation(questions, "", 10, "Fail"));
+                    Toast.makeText(context, "time's up, FAIL!", Toast.LENGTH_SHORT).show();
             }
         }.start();
     }
@@ -252,14 +262,21 @@ public class StartActivity extends AppCompatActivity implements View.OnClickList
         activeButton = false;
     }
 
+    public void stopCountDown(){
+        editTextShowResult.setText("");
+        countDownTimer.cancel();
+        countDownTimer2.cancel();
+    }
+
     public void clearText(){
-        editTextShowResult.setText(null);
-        textViewOperation.setText(null);
+        editTextShowResult.setText("");
+        textViewOperation.setText("");
         editTextShowResult.requestFocus();
     }
 
     public void saveInformation(){
-        userAnswer = Integer.valueOf(editTextShowResult.getText().toString());
+
+        userAnswer = editTextShowResult.getText().toString();
         questions = textViewOperation.getText().toString();
 
         infoList.add(new StoreInformation(questions,userAnswer,(int)userTimer / 1000,status));

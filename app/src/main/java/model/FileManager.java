@@ -3,6 +3,8 @@ package model;
 import android.content.Context;
 import android.widget.Toast;
 
+import com.midterm.lasalle.timercalculationproject2.SecondActivity;
+
 import java.io.File;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
@@ -31,10 +33,4 @@ public class FileManager {
 
     }
 
-//    public String readFromFile(){
-//
-//
-//
-//
-//    }
 }
