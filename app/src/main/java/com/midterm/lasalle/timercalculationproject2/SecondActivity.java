@@ -17,8 +17,9 @@ import model.StoreInformation;
 public class SecondActivity extends AppCompatActivity implements View.OnClickListener {
     ListView listViewResult;
     TextView textViewPercentage;
-    Button btnOk;
+    Button btnOk, btnSave;
     ArrayList<StoreInformation> list;
+    FileManager fileManager;
     float rightCounter = 0.0f;
     int getTotalQuestion, getTotalAnswer, getTotalElapsedTime,getTotalDuration, getEmptyAnswers;
     double getVelocity = 0.0d;
@@ -47,12 +48,13 @@ public class SecondActivity extends AppCompatActivity implements View.OnClickLis
         }
 
         getTotalAnswer = ((list.size()) - getEmptyAnswers);
-        getVelocity = Double.valueOf(getTotalElapsedTime)/ Double.valueOf(getTotalDuration);
+        double vel = Double.valueOf(getTotalElapsedTime)/ Double.valueOf(getTotalDuration);
+        getVelocity = Math.round(vel);
         int wrong = Math.round((list.size() - rightCounter)/list.size()*100);
         int right = Math.round((rightCounter/list.size())*100);
 
 
-           text = "Total questions: " + getTotalQuestion + "\n" + "Total answered questions: " + getTotalAnswer +
+           text = "\n" + "Total questions: " + getTotalQuestion + "\n" + "Total answered questions: " + getTotalAnswer +
                 "\n" + "Total Duration: " + getTotalDuration + "\n"+ "Total Elapsed Time: "+ getTotalElapsedTime +
                 "\n" + "Correct Answers: " + right +"%" + "\n" + "Wrong Answers: " + wrong + "%" + "\n"+ "Velocity: " + getVelocity;
 
@@ -66,7 +68,11 @@ public class SecondActivity extends AppCompatActivity implements View.OnClickLis
         listViewResult.setAdapter(adapter);
         textViewPercentage = findViewById(R.id.textViewPercentage);
         btnOk = findViewById(R.id.btnOk);
+        btnSave = findViewById(R.id.btnSave);
         btnOk.setOnClickListener(this);
+        btnSave.setOnClickListener(this);
+        fileManager = new FileManager(this);
+
     }
 
     @Override
@@ -76,6 +82,10 @@ public class SecondActivity extends AppCompatActivity implements View.OnClickLis
 
             case R.id.btnOk:
                 finish();
+                break;
+
+            case R.id.btnSave:
+                fileManager.appendInFile(text);
                 break;
         }
 

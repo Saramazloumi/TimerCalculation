@@ -213,7 +213,7 @@ public class StartActivity extends AppCompatActivity implements View.OnClickList
                 break;
         }
     }
-Context context  = this;
+        Context context  = this;
     private void startTimer() {
         question.generateOperation();
         textViewOperation.setText(question.toString());
